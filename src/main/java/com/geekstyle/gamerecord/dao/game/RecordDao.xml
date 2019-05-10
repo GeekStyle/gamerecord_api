@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.geekstyle.gamerecord.dao.game.RecordDao">
+
+	<select id="getRecordById" parameterType="hashmap" resultType="Record" statementType="STATEMENT">
+		select
+			title,
+			video_addr videoAddr
+		from
+			${tableName}
+		where
+			id = ${id}
+	</select>
+	
+	<select id="getRecordByParam" parameterType="hashmap" resultType="Record" statementType="STATEMENT">
+		select
+			id,
+			title,
+			video_addr videoAddr,
+			cover_addr coverAddr
+		from
+			${tableName}
+		where
+			1=1 
+			<foreach item="param" collection="list">
+            	and ${param.columnName} = ${param.columnValue} 
+            </foreach>
+            limit ${startIndex},${singlePageCount}
+	</select>
+	
+	<select id="getTotalRecordByParam" parameterType="hashmap" resultType="_int" statementType="STATEMENT">
+		select
+			count(1)
+		from
+			${tableName}
+		where
+			1=1 
+			<foreach item="param" collection="list">
+            	and ${param.columnName} = ${param.columnValue} 
+            </foreach>
+	</select>
+	
+	
+	<select id="getRecordByUserId" parameterType="int" resultType="Record">
+		select
+			id,
+			sub_table_id subTableId,
+			game_id gameId,
+			title,
+			video_addr videoAddr,
+			cover_addr coverAddr
+		from
+			t_record
+		where
+			user_id = #{userId}
+	</select>
+	
+	<insert id="createRecord" parameterType="hashmap" statementType="STATEMENT" keyProperty="id" useGeneratedKeys="true">
+		insert into ${tableName}
+			(
+			<foreach item="param" collection="list" separator=",">
+            	${param.columnName} 
+            </foreach>
+			)
+		values
+			(
+			<foreach item="param" collection="list" separator=",">
+            	${param.columnValue} 
+            </foreach>
+			)
+	</insert>
+	
+	<insert id="insertBaseRecord" parameterType="Record">
+		insert into t_record
+			(
+				sub_table_id,
+				game_id,
+				user_id,
+				title,
+				video_addr,
+				cover_addr,
+				create_time
+			)
+		values
+			(
+				#{subTableId},
+				#{gameId},
+				#{userId},
+				#{title},
+				#{videoAddr},
+				#{coverAddr},
+				#{createTime}
+			)
+	</insert>
+	
+</mapper>

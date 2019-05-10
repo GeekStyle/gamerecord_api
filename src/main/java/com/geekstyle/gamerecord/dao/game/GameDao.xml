@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.geekstyle.gamerecord.dao.game.GameDao">
+
+	<select id="getAllGames" resultType="Game">
+		select
+			id,
+			name,
+			logo_addr logoAddr
+		from
+			t_game
+	</select>
+	
+	<select id="getTableNameById" resultType="string" parameterType="int">
+		select
+			table_name tableName
+		from
+			t_game
+		where
+			id = #{id}
+	</select>
+	
+	<select id="isNameExist" parameterType="string" resultType="_int">
+		select
+			count(1)
+		from	
+			t_game
+		where
+			name = #{name}
+	</select>
+	
+	<insert id="createGame" parameterType="Game">
+		insert into t_game
+			(
+				master_user_id,
+				name,
+				table_name,
+				logo_addr,
+				total_members,
+				total_records,
+				create_time
+			)
+			values
+			(
+				#{masterUserId},
+				#{name},
+				#{tableName},
+				#{logoAddr},
+				#{totalMembers},
+				#{totalRecords},
+				#{createTime}
+			)
+		
+	</insert>
+	
+</mapper>
